@@ -1,0 +1,21 @@
+import socket
+serverName = "192.168.127.255"
+serverPort = 12000
+clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+clientSocket.connect((serverName, serverPort))
+while True:
+      menu = clientSocket.recv(1024)
+      print(menu.decode())
+      encunciado = input("Escoge una opcion: ")
+      clientSocket.send(enunciado.encode())
+      enunciado_modificado = clientSocket.recv(1024)
+      print("Desde el servidor: ", enunciado_modificado.decode())
+      if(enunciado_modificado.decode() == "Escribe una oracion: " or enunciado_modificado.decode() == "Escribe el nombre del archivo que buscas: "):
+            enunciado = input(modifiedSentence.decode())
+            clientSocket.send(enunciado.encode())
+            enunciado_modificado = clientSocket.recv(1024)
+            print("Desde el servidor: ", enunciado_modificado.decode())
+      s_n = input("¿Deseas continuar? s/n")
+      if(s_n.lower() == "n"):
+            break
+clientSocket.close()
