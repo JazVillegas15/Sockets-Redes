@@ -1,0 +1,57 @@
+import socket
+from _thread import*
+import threading
+import datetime
+import os
+print_lock = threading.Lock()
+
+def mi_thread(conectionSocket):
+      while 1:
+            enunciado = "Bienvenid@ a mi servidor.\n Escoge una opcion: \n1. Ver la hora\n 2. Número de s's visibles\n 3. Directorio hogar.\n 4.Ver un archivo\n"
+            conectionSocket.send(enunciado.encode())
+            con_socket = conectionSocket.recv(1024)
+            opcion = con_socket.decode()
+            if(opcion == "1"):
+                  hora = datetime.datetime.now()
+                  hora_completa = hora.strftime("%H:%M")
+                  conectionSocket.send(hora_completa.encode())
+                  print(hora_completa)
+            if(opcion == "2"):
+                  enunciado = "Escribe una oracion: "
+                  conectionSocket.send(enucniado.encode())
+                  con_socket = conectionSocket.recv(1024)
+                  num_s = con_socket.decode().lower()
+                  enunciado = "Se encontraron: " + str(num_s.count('s')) + "\n"
+                  conectionSocket.send(enunciado.encode())
+            if(opcion == "3"):
+                  contenido = os.listdir("/home/")
+                  enunciado = ""
+                  for fichero in contenido:
+                              enunciado += fichero + " "
+                  conectionSocket.send(sentence.encode())
+            if(opcion == "4"):
+                  enunciado = "Escribe el nombre del archivo que buscas: "
+                  conectionSocket.send(enunciado.encode())
+                  con_socket = conectionSocket.recv(1024)
+                  archivo = open(con_socket, "r")
+                  if(archivo.readable()):
+                        con_socket = archivo.read(1024)
+                        enunciado = str(con_socket)
+                        archivo.close()
+                        conectionSocket.sendall(enunciado.encode())
+                  else:
+                        enunciado = "Error"
+                        conectionSocket.send(enunciado.encode())
+      connectionSocket.close()
+
+def Main():
+      serverPort=12000
+      serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      serverSocket.bind(("192.168.127.255", serverPort))
+      serverSocket.listen(5)
+      print("Servidor listo para recibir TCP")
+      while True:
+            cliente, dir = serverSocket.accept()
+            print("Estas conectad@ a: ", dir[0], ":", dir[1])
+            start_new_thread(mi_thread,(cliente,))
+      serverSocket.close()
